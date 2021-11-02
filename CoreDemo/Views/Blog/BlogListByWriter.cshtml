@@ -27,7 +27,7 @@
             @if (@item.BlogStatus == true){<td>Aktif</td>}
             else{ <td>Pasif</td> }
             <td><a href ="/Blog/DeleteBlog/@item.BlogyID/" class="btn btn-danger">Sil</a></td>
-            <td><a href ="#" class="btn btn-warning">Düzenle</a></td>
+            <td><a href ="/Blog/EditBlog/@item.BlogyID/" class="btn btn-warning">Düzenle</a></td>
         </tr>
     }
 </table>
