@@ -41,7 +41,7 @@ namespace BusinessLayer.Concrete
 
         public Writer TGetById(int id)
         {
-            throw new NotImplementedException();
+            return _writerDal.GetByID(id);
         }
 
         public List<Writer> GetWriterByID(int id)

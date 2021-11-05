@@ -3,14 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessLayer.Concrete;
+using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CoreDemo.Controllers
 {
-    //[Authorize]
     public class WriterController : Controller
     {
-        
+        WriterManager vm = new WriterManager(new EfWriterRepository());
+
         public IActionResult Index()
         {
             return View();
@@ -42,6 +44,13 @@ namespace CoreDemo.Controllers
         public PartialViewResult WriterFooterPartial()
         {
             return PartialView();
+        }
+
+        [AllowAnonymous]
+        public IActionResult WriterEditProfile()
+        {
+            var writervalues = vm.TGetById(1);
+            return View(writervalues);
         }
     }
 }
