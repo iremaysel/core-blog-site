@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Concrete;
+using BusinessLayer.ValidationRules;
 using DataAccessLayer.EntityFramework;
+using EntityLayer.Concrete;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CoreDemo.Controllers
@@ -47,10 +50,33 @@ namespace CoreDemo.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
         public IActionResult WriterEditProfile()
         {
-            var writervalues = vm.TGetById(1);
+            var writervalues = vm.TGetById(1003);
             return View(writervalues);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult WriterEditProfile(Writer p)
+        {
+            WriterValidator wl = new WriterValidator();
+            ValidationResult result = wl.Validate(p);
+            if (result.IsValid)
+            {
+                vm.TUpdate(p);
+                return RedirectToAction("Index", "Dashboard");
+
+            }
+            else
+            {
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                }
+            }
+            return View();
         }
     }
 }
