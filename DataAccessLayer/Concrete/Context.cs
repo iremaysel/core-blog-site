@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EntityLayer.Concrete;
 
@@ -15,7 +16,24 @@ namespace DataAccessLayer.Concrete
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("server = AYSEL; database = CoreBlogDb; integrated security = true;");
+            optionsBuilder.UseSqlServer("server = AYSEL; " +
+                                        "database = CoreBlogDb; " +
+                                        "integrated security = true;");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Message2>()
+                .HasOne(x => x.SenderUser)
+                .WithMany(y => y.WriterSender)
+                .HasForeignKey(z => z.SenderID)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<Message2>()
+                .HasOne(x => x.ReceiverUser)
+                .WithMany(y => y.WriterReceiver)
+                .HasForeignKey(z => z.ReceiverID)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         }
 
         public DbSet<About> Abouts { get; set; }
@@ -37,5 +55,10 @@ namespace DataAccessLayer.Concrete
         public DbSet<Notification> Notifications { get; set; }
 
         public DbSet<Message> Messages{ get; set; }
+        
+        public DbSet<Message2> Message2s{ get; set; }
+
+   
+
     }
 }
